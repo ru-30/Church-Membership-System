@@ -125,7 +125,111 @@ The application provides the following sections:
 5. **Modification history and undo**: Reverse recent register, update, and delete operations.
 6. **Display all members**: View member records currently stored in the array.
 7. **Save and load records**: Store or retrieve member information from disk.
-8. **Exit**: Finish the program and offer to save changes.
+0. **Exit**: Finish the program and offer to save changes.
+
+## Step-by-Step Verification
+
+Use this walkthrough to check that the main features work and to see what output to expect. It creates and changes test records, so perform it in a separate copy of the project rather than in a folder containing important member data.
+
+### Prepare a Safe Test Copy
+
+1. In File Explorer, copy the project folder to a separate test folder.
+2. If the copied folder contains `church_members.txt`, rename that file in the test copy (for example, to `church_members.backup.txt`). This lets the test start with a clean set of records while preserving the original file.
+3. In the test copy, double-click `run.bat`. It compiles the program and opens its console window. Keep this window open while testing.
+4. The main menu should display options `1` through `7` and `0` for exit. If compilation fails, the launcher prints an error instead of starting the menu.
+
+In the examples below, enter the number for the requested menu option and press **Enter**. In a submenu, enter `0` to return to the main menu.
+
+### Load Demonstration Data
+
+1. From the main menu, enter `7` to open **Save and Load Member Records**.
+2. Enter `3` for **Load Sample Data**.
+3. Expect a success message reporting **10 members added** and **3 requests queued**.
+4. Enter `0` to return to the main menu.
+
+The sample members have IDs `M001` through `M010`. The three requests are for `M002` (Counseling), `M004` (Prayer), and `M007` (Baptism). Loading sample data adds it to the current session; do not select it repeatedly, or it will add more requests.
+
+### Verify the Member Array and Search
+
+1. Enter `6` from the main menu. The table should show 10 members and a total of `10 / 100`.
+2. Enter `1` to open **Member Record Management**, then `3` to search.
+3. Enter `M001`. The program should find and display John Smith.
+4. Try an unknown ID such as `NO999`. The program should report that the member was not found.
+5. Enter `0` to return to the main menu.
+
+### Verify Registration, Update, Delete, and Undo
+
+Register a test member:
+
+1. From the main menu, enter `1`, then `1` to register.
+2. At each prompt, enter these values:
+
+   | Prompt | Test value |
+   | --- | --- |
+   | Member ID | `T001` |
+   | First name | `Test` |
+   | Last name | `Member` |
+   | Gender | `1` (Male) |
+   | Phone | `0781234567` |
+   | Email | `test.member@example.com` |
+   | Date of birth | `2000-01-01` |
+   | Membership date | `2020-01-01` |
+   | Ministry | `1` (Choir) |
+   | Status | `1` (Active) |
+   | Attendance | `7` |
+
+3. Expect a registration success message and a message that the member was added to the active linked list.
+4. From the member menu, enter `2` to view all members. There should now be 11 records, including `T001`.
+5. Enter `4` to update a member, enter ID `T001`, choose field `10` (Attendance), and enter `8`. Choose field `0` to finish. Expect an update success message.
+6. Return to the main menu with `0`. Enter `5`, then `1` to view history; the update should be listed.
+7. Enter `2` in the history menu to undo. Leave the history menu with `0`, then enter `1` → `3` from the main menu and search for `T001`; attendance should be restored to `7`.
+8. In the member menu, enter `5` to delete. Enter `T001`, confirm with `y`, then verify the record is gone using **View All Members**.
+9. Leave the member menu with `0`, then enter `5` → `2` from the main menu to undo the deletion. Leave the history menu with `0`, then search for `T001` using `1` → `3`; it should be restored.
+
+### Verify the Active-Member Linked List
+
+1. From the main menu, enter `2` to open **Dynamic Membership Management**.
+2. Enter `6` to count members. There should be 9 active members: the 8 active sample members plus `T001`.
+3. Enter `3` and search for `T001`; it should be found in the list.
+4. Enter `4`, enter `T001`, and confirm with `y` to remove it from the active list. The array record should remain, with status `Inactive`.
+5. Leave the linked-list menu with `0`, then enter `5` → `2` from the main menu to undo. Leave the history menu with `0`, return to the linked-list menu, and count again; the count should return to 9.
+
+### Verify Searching and Sorting
+
+1. From the main menu, enter `4` → `1`, then search for `M001`. The linear search should find John Smith.
+2. Enter `2` and search for `M010`. The binary search should report that it sorted a copy of the records by ID before searching and should find Sarah Uwimana.
+3. Enter `3` to sort by attendance in ascending order, then `5` to display sorted members. `T001` (attendance 7) should be first and `M005` (attendance 40) last.
+4. Enter `4` to sort in descending order, then `5` to display. `M005` should be first and `T001` last.
+
+### Verify the Service-Request Queue
+
+1. From the main menu, enter `3` → `3`. The three sample requests should appear in FIFO order: M002 Counseling, M004 Prayer, and M007 Baptism.
+2. Enter `2` to process the oldest request. It should process M002's Counseling request and report two pending requests.
+3. Enter `3` again. M004's Prayer request should now be at the front.
+4. To test a transfer, leave the request menu with `0`, then enter `3` → `1`. Enter member ID `M001`, request type `5` (Transfer), and a description such as `Transfer test`.
+5. View pending requests. The new transfer should appear after the older requests. Process requests with option `2` until the transfer is reached. The queue should process requests in arrival order and report that M001 was marked `Transferred`.
+6. Leave the request menu with `0` and enter `6` to verify M001's status is `Transferred`. Enter `2` → `6` to verify the active-list count is now 8.
+7. Leave the linked-list menu with `0`, then use main menu `5` → `2` to undo the transfer status change. Enter `6` again to verify M001 is Active; the active-list count should return to 9.
+
+### Verify Saving and Loading
+
+1. From the main menu, enter `7` → `1` to save. Expect a success message and a `church_members.txt` file in the test folder.
+2. Leave the file menu with `0`, then exit with main menu option `0` and answer `y` to the save prompt.
+3. Run `run.bat` again from the test folder. The startup message should report the saved member count, and menu `6` should show `T001`.
+4. The request queue is in memory only, so pending requests do not persist after restarting. Member records do persist.
+5. To test the load menu while records are already present, choose `7` → `2` and confirm with `y`. The saved member records should reload and the active linked list should be rebuilt.
+
+### Expected Test Results
+
+- Sample data: 10 members and 3 pending requests.
+- After registering `T001`: 11 total records and 9 active members.
+- Undoing an update restores the previous field value.
+- Undoing a deletion restores the member record.
+- Removing a member from the active list changes the status to Inactive but keeps the array record; undo restores Active status.
+- Search finds known IDs and reports unknown IDs as not found.
+- Attendance sorting puts the lowest or highest attendance first, depending on the selected order.
+- Requests are processed oldest first.
+- Saving and restarting preserves member records, but not pending requests or undo history.
 
 ## Importance
 
