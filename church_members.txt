@@ -1,0 +1,2 @@
+# Church Membership Management System - data file
+# id|first|last|gender|phone|email|dob|membershipDate|ministry|status|attendance
