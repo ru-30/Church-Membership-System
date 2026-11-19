@@ -2,292 +2,385 @@
 
 ## Project Information
 
-- System: Church Membership Management System
-- Course: INSY 8321 - Data Structures and Algorithms
-- Institution: Adventist University of Central Africa
-- Student Name: MUGISHA Espoir
-- Student ID: 27824
-- Project No.: 31
+- **System Name:** Church Membership Management System
+- **Course:** INSY 8321 – Data Structures and Algorithms
+- **Institution:** Adventist University of Central Africa (AUCA)
+- **Student Name:** MUGISHA Espoir
+- **Student ID:** 27824
+- **Project Number:** 31
+- **Programming Language:** C
+
+---
 
 ## Overview
 
-This console application manages church member records and service requests. It demonstrates an array, singly linked list, circular queue, stack, searching, sorting, and file storage.
+The Church Membership Management System is a console-based application developed to organize and manage church membership records and service requests.
 
-## Main Idea
+The system demonstrates the practical application of arrays, singly linked lists, queues, stacks, searching algorithms, sorting algorithms, and file handling.
 
-The project provides a simple digital register for a church. Instead of keeping member information and requests in separate paper records or scattered notebooks, the system stores organized information in one program. A church administrator can register members, update their details, record attendance, identify active members, accept service requests, search for members, sort records, undo changes, and save information for future use.
+It provides a centralized digital register that enables church administrators to register members, view and update their information, manage active membership, process service requests, search and sort records, undo recent changes, and preserve member information.
 
-The system is intended as an educational implementation of data structures and algorithms. It shows how different structures solve different problems:
+## Main Objectives
 
-- An array provides direct access to every member record.
-- A linked list represents active members that can change in status.
-- A queue processes service requests in the order in which they arrive.
-- A stack keeps a history that allows administrators to undo operations.
-- Search and sorting functions help an administrator find and organize information quickly.
-- File storage allows records to continue existing after the program closes.
+The main objectives of the system are to:
 
-## Problem Addressed
+- Maintain organized church membership records.
+- Register, display, search, update, and delete member information.
+- Manage active members using a singly linked list.
+- Process church service requests using the FIFO principle.
+- Implement Linear Search and Binary Search.
+- Organize member records using Bubble Sort.
+- Maintain modification history and support undo operations using a stack.
+- Save and retrieve member records using file handling.
+- Demonstrate practical applications of data structures and algorithms.
 
-Churches often manage information manually. Paper records can be misplaced, become difficult to update, take time to search, or contain conflicting information. For example, an administrator may need to check whether a person is a member, find a phone number, update a ministry assignment, respond to a baptism request, or process a transfer. Manual searching and writing can make these tasks slow and can increase the chance of errors.
+## Problem Statement
 
-This project provides a clear and consistent computerized process for those tasks. It gives information a predictable structure and separates member records, active membership, service requests, and modification history.
+Churches may manage membership information using paper documents, notebooks, or separate records. These approaches can make information difficult to locate, update, and maintain accurately.
 
-## How the System Works
+Administrators may need to verify membership, retrieve contact information, update ministry assignments, record attendance, or process requests such as baptism, counseling, prayer, and membership transfers.
 
-### 1. Program Startup
+Manual record management can be time-consuming and may increase the possibility of misplaced, outdated, or inconsistent information.
 
-When the program starts, it initializes the in-memory queue and undo stack, enables console colors when supported, and attempts to load `church_members.txt`. If the file is not present, the system starts with an empty member array and displays an informational message.
+The Church Membership Management System addresses these challenges by providing a structured computerized solution for managing member records, active membership, service requests, and modification history.
 
-For every saved member that has an active status, the program rebuilds the linked list so that the linked list and array begin in a consistent state.
+## Main Features
 
-### 2. Member Registration and Storage
+1. **Member Registration:** Register new church members and store their information.
+2. **Member Record Management:** View, search, update, and delete member records.
+3. **Active Membership Management:** Manage active members using a singly linked list.
+4. **Service Request Management:** Submit, display, and process church requests using a queue.
+5. **Searching:** Locate member records using Linear Search and Binary Search.
+6. **Sorting:** Arrange member records using Bubble Sort.
+7. **Modification History:** Maintain a history of changes using a stack.
+8. **Undo Operations:** Reverse recent registrations, updates, and deletions.
+9. **Data Persistence:** Save and retrieve member records using file handling.
+10. **Member Display:** Display all registered members and their information.
 
-The administrator enters member details such as:
+## Member Information
 
-- Member identification number
-- First and last name
+Each member record contains the following information:
+
+- Member ID
+- First Name
+- Last Name
 - Gender
-- Phone number
-- Email address
-- Date of birth
-- Membership date
-- Ministry
-- Status
-- Attendance count
+- Phone Number
+- Email Address
+- Date of Birth
+- Membership Date
+- Ministry or Department
+- Membership Status
+- Attendance Count
 
-The member is added to the primary array. A successful registration is also saved as a stack history entry so that it can be undone.
+The Member ID uniquely identifies each member and helps prevent duplicate registrations.
 
-### 3. Active Members Linked List
+---
 
-The linked list contains only members whose status is `Active`. It is not a second source of permanent records. The array remains the primary storage.
+## System Operation
 
-The system rebuilds or updates the linked list whenever member status or records change. This makes the list useful for displaying active members and demonstrates how linked nodes can be created, searched, inserted, displayed, or removed at runtime.
+### 1. Member Registration and Storage
 
-### 4. Service Request Queue
+The administrator enters the member's information. The system validates the submitted details and checks whether the Member ID already exists.
 
-Church members can submit requests for services such as:
+If the information is valid and the array has available capacity, the new member is stored in the primary member array.
+
+Successful registration is also recorded in the modification history to support undo operations.
+
+### 2. Active Membership Management
+
+The singly linked list maintains members whose membership status is `Active`.
+
+The primary array remains the main storage for all member records, while the linked list provides a dynamic representation of active members.
+
+The linked list is synchronized with the member records whenever membership information or status changes.
+
+### 3. Church Service Request Management
+
+Members can submit requests involving:
 
 - Membership
 - Baptism
 - Counseling
 - Prayer
-- Activity participation
+- Activity Participation
 - Transfer
 
-The queue stores request records in first-in, first-out order. Before a request is submitted, the system verifies that the member ID belongs to an existing member. The administrator can view the next request, process it, or leave it waiting.
+The system processes requests using the First-In, First-Out (FIFO) principle. This means the earliest submitted pending request is processed first.
 
-When a transfer request is processed, the member's status is changed to `Transferred` and that member is removed from the active-member linked list.
+Before accepting a request, the system verifies that the associated Member ID exists.
 
-### 5. Search and Sorting
+When a transfer request is processed, the member's status changes to `Transferred`, and the member is removed from the active-member linked list.
 
-The system searches the member array according to the selected criteria. It can help administrators find member records rather than manually reviewing the complete list.
+### 4. Searching and Sorting
 
-Sorting arranges member records according to a chosen field and updates a sort label so the administrator can know how the current records are organized. Search and sort operations work on the array, which keeps member storage consistent.
+The system provides searching and sorting operations to make member information easier to retrieve and organize.
 
-### 6. Modification History and Undo
+- **Linear Search:** Examines member records one by one until the requested Member ID is found or all records have been checked.
+- **Binary Search:** Searches for a Member ID by repeatedly dividing the search interval into two halves. The records must be sorted by Member ID in ascending order.
+- **Bubble Sort:** Arranges member records by repeatedly comparing adjacent records and swapping them when necessary.
 
-Every registration, update, or deletion can be recorded in the stack. The latest operation is the first operation that undo reverses.
+Complete member records are moved together during sorting to ensure that each member's information remains correctly associated with their identification number.
 
-- Registration undo removes the newly registered member.
-- Update undo restores the member's previous values.
-- Deletion undo restores the deleted member at its former array position.
+### 5. Modification History and Undo
 
-After undo, the system rebuilds or synchronizes the active linked list.
+The system uses a stack to maintain snapshots of member records before successful modifications.
 
-### 7. Display and Reporting
+The stack follows the Last-In, First-Out (LIFO) principle, meaning the most recent change is reversed first.
 
-The system can display all stored members or the subset represented by the active-member linked list. This allows administrators to view the organization of the data and verify that changes are reflected consistently.
+The undo functionality supports:
 
-### 8. Save and Exit
+- Reversing a member registration.
+- Restoring previous member information after an update.
+- Recovering deleted member records.
 
-The program opens `church_members.txt` when loading or saving records. Saving writes the member array to temporary storage and then replaces the saved file. This helps prevent the previous file from being directly overwritten while the save operation is in progress.
+After an undo operation, the active-member linked list is synchronized with the restored records.
 
-Before exit, the program asks whether the administrator wants to save the member records. Saved data is loaded automatically the next time the program starts.
+### 6. Saving and Loading Member Records
 
-## Data Structures
+The system uses the `church_members.txt` file to preserve member information.
 
-1. **Array (`members[]`)**: Primary member storage. Every member record is stored in this array.
-2. **Linked list (`head`)**: Contains active members only. It is synchronized with the array after member changes.
-3. **Circular queue (`requestQueue`)**: Stores service requests in first-in, first-out order. Requests require an existing member. Processing a transfer request changes the member status to Transferred and removes the member from the active linked list.
-4. **Search and sort**: Operates directly on the primary member array.
-5. **Stack (`history`)**: Records registration, update, and deletion operations. Undo restores the relevant array entry and rebuilds the active linked list.
+Member records can be saved and retrieved in subsequent program sessions.
 
-Only the member array is saved to disk. At startup, records are loaded from `church_members.txt` and the active-member linked list is rebuilt.
+When saved records are loaded, the active-member linked list is rebuilt using members whose status is `Active`.
 
-## Main Menu
+The service-request queue and modification history are maintained in memory and are not preserved between program sessions.
 
-The application provides the following sections:
+---
 
-1. **Member record management**: Register, update, delete, or search individual members.
-2. **Dynamic membership management**: Work with active-member linked-list operations.
-3. **Church service request management**: Submit and process church requests.
-4. **Searching and sorting**: Find and arrange member records.
-5. **Modification history and undo**: Reverse recent register, update, and delete operations.
-6. **Display all members**: View member records currently stored in the array.
-7. **Save and load records**: Store or retrieve member information from disk.
-0. **Exit**: Finish the program and offer to save changes.
+## Data Structures and Algorithms
 
-## Step-by-Step Verification
+### 1. Array – Member Record Management
 
-Use this walkthrough to check that the main features work and to see what output to expect. It creates and changes test records, so perform it in a separate copy of the project rather than in a folder containing important member data.
+**Purpose**
 
-### Prepare a Safe Test Copy
+The array stores the primary collection of church member records. It provides a structured way to register, display, search, update, and delete members.
 
-1. In File Explorer, copy the project folder to a separate test folder.
-2. If the copied folder contains `church_members.txt`, rename that file in the test copy (for example, to `church_members.backup.txt`). This lets the test start with a clean set of records while preserving the original file.
-3. In the test copy, double-click `run.bat`. It compiles the program and opens its console window. Keep this window open while testing.
-4. The main menu should display options `1` through `7` and `0` for exit. If compilation fails, the launcher prints an error instead of starting the menu.
+**Main Operations**
 
-In the examples below, enter the number for the requested menu option and press **Enter**. In a submenu, enter `0` to return to the main menu.
+- Register a new member.
+- Display member records.
+- Search for a member.
+- Update member information.
+- Delete a member.
+- Check for duplicate Member IDs.
+- Verify available array capacity.
 
-### Load Demonstration Data
+**Flowchart – Figure 1**
 
-1. From the main menu, enter `7` to open **Save and Load Member Records**.
-2. Enter `3` for **Load Sample Data**.
-3. Expect a success message reporting **10 members added** and **3 requests queued**.
-4. Enter `0` to return to the main menu.
+![Figure 1: Array-based Member Record Management](images/figure-1-array-management.png)
 
-The sample members have IDs `M001` through `M010`. The three requests are for `M002` (Counseling), `M004` (Prayer), and `M007` (Baptism). Loading sample data adds it to the current session; do not select it repeatedly, or it will add more requests.
+*Figure 1: Flowchart illustrating the process of adding and managing church member records using an array.*
 
-### Verify the Member Array and Search
+**Time Complexity**
 
-1. Enter `6` from the main menu. The table should show 10 members and a total of `10 / 100`.
-2. Enter `1` to open **Member Record Management**, then `3` to search.
-3. Enter `M001`. The program should find and display John Smith.
-4. Try an unknown ID such as `NO999`. The program should report that the member was not found.
-5. Enter `0` to return to the main menu.
+| Operation | Complexity |
+|---|---|
+| Duplicate ID search | O(n) |
+| Insertion after validation | O(1) |
+| Complete addition operation | O(n) |
 
-### Verify Registration, Update, Delete, and Undo
+### 2. Singly Linked List – Dynamic Membership Management
 
-Register a test member:
+**Purpose**
 
-1. From the main menu, enter `1`, then `1` to register.
-2. At each prompt, enter these values:
+The singly linked list manages active church members using dynamically allocated nodes connected through pointers.
 
-   | Prompt | Test value |
-   | --- | --- |
-   | Member ID | `T001` |
-   | First name | `Test` |
-   | Last name | `Member` |
-   | Gender | `1` (Male) |
-   | Phone | `0781234567` |
-   | Email | `test.member@example.com` |
-   | Date of birth | `2000-01-01` |
-   | Membership date | `2020-01-01` |
-   | Ministry | `1` (Choir) |
-   | Status | `1` (Active) |
-   | Attendance | `7` |
+Each node contains member information and a pointer to the next node.
 
-3. Expect a registration success message and a message that the member was added to the active linked list.
-4. From the member menu, enter `2` to view all members. There should now be 11 records, including `T001`.
-5. Enter `4` to update a member, enter ID `T001`, choose field `10` (Attendance), and enter `8`. Choose field `0` to finish. Expect an update success message.
-6. Return to the main menu with `0`. Enter `5`, then `1` to view history; the update should be listed.
-7. Enter `2` in the history menu to undo. Leave the history menu with `0`, then enter `1` → `3` from the main menu and search for `T001`; attendance should be restored to `7`.
-8. In the member menu, enter `5` to delete. Enter `T001`, confirm with `y`, then verify the record is gone using **View All Members**.
-9. Leave the member menu with `0`, then enter `5` → `2` from the main menu to undo the deletion. Leave the history menu with `0`, then search for `T001` using `1` → `3`; it should be restored.
+**Main Operations**
 
-### Verify the Active-Member Linked List
+- Insert a member.
+- Search for a member.
+- Display active members.
+- Remove a member.
+- Count active members.
+- Release allocated memory.
 
-1. From the main menu, enter `2` to open **Dynamic Membership Management**.
-2. Enter `6` to count members. There should be 9 active members: the 8 active sample members plus `T001`.
-3. Enter `3` and search for `T001`; it should be found in the list.
-4. Enter `4`, enter `T001`, and confirm with `y` to remove it from the active list. The array record should remain, with status `Inactive`.
-5. Leave the linked-list menu with `0`, then enter `5` → `2` from the main menu to undo. Leave the history menu with `0`, return to the linked-list menu, and count again; the count should return to 9.
+**Flowchart – Figure 2**
 
-### Verify Searching and Sorting
+![Figure 2: Singly Linked List Dynamic Member Management](images/figure-2-linked-list-management.png)
 
-1. From the main menu, enter `4` → `1`, then search for `M001`. The linear search should find John Smith.
-2. Enter `2` and search for `M010`. The binary search should report that it sorted a copy of the records by ID before searching and should find Sarah Uwimana.
-3. Enter `3` to sort by attendance in ascending order, then `5` to display sorted members. `T001` (attendance 7) should be first and `M005` (attendance 40) last.
-4. Enter `4` to sort in descending order, then `5` to display. `M005` should be first and `T001` last.
+*Figure 2: Flowchart illustrating dynamic member management using a singly linked list.*
 
-### Verify the Service-Request Queue
+**Time Complexity**
 
-1. From the main menu, enter `3` → `3`. The three sample requests should appear in FIFO order: M002 Counseling, M004 Prayer, and M007 Baptism.
-2. Enter `2` to process the oldest request. It should process M002's Counseling request and report two pending requests.
-3. Enter `3` again. M004's Prayer request should now be at the front.
-4. To test a transfer, leave the request menu with `0`, then enter `3` → `1`. Enter member ID `M001`, request type `5` (Transfer), and a description such as `Transfer test`.
-5. View pending requests. The new transfer should appear after the older requests. Process requests with option `2` until the transfer is reached. The queue should process requests in arrival order and report that M001 was marked `Transferred`.
-6. Leave the request menu with `0` and enter `6` to verify M001's status is `Transferred`. Enter `2` → `6` to verify the active-list count is now 8.
-7. Leave the linked-list menu with `0`, then use main menu `5` → `2` to undo the transfer status change. Enter `6` again to verify M001 is Active; the active-list count should return to 9.
+| Operation | Complexity |
+|---|---|
+| Traversal | O(n) |
+| Duplicate detection | O(n) |
+| Linking a new node after traversal | O(1) |
+| Complete insertion operation | O(n) |
 
-### Verify Saving and Loading
+### 3. Queue – Church Service Request Processing
 
-1. From the main menu, enter `7` → `1` to save. Expect a success message and a `church_members.txt` file in the test folder.
-2. Leave the file menu with `0`, then exit with main menu option `0` and answer `y` to the save prompt.
-3. Run `run.bat` again from the test folder. The startup message should report the saved member count, and menu `6` should show `T001`.
-4. The request queue is in memory only, so pending requests do not persist after restarting. Member records do persist.
-5. To test the load menu while records are already present, choose `7` → `2` and confirm with `y`. The saved member records should reload and the active linked list should be rebuilt.
+**Purpose**
 
-### Expected Test Results
+The queue manages church service requests using the First-In, First-Out (FIFO) principle.
 
-- Sample data: 10 members and 3 pending requests.
-- After registering `T001`: 11 total records and 9 active members.
-- Undoing an update restores the previous field value.
-- Undoing a deletion restores the member record.
-- Removing a member from the active list changes the status to Inactive but keeps the array record; undo restores Active status.
-- Search finds known IDs and reports unknown IDs as not found.
-- Attendance sorting puts the lowest or highest attendance first, depending on the selected order.
-- Requests are processed oldest first.
-- Saving and restarting preserves member records, but not pending requests or undo history.
+The first request submitted is the first request processed.
 
-## Importance
+**Main Operations**
 
-This project is important because it:
+- Submit a service request (Enqueue).
+- Process the oldest request (Dequeue).
+- Display pending requests.
+- Check whether the queue is empty.
+- Release allocated queue nodes.
 
-- Demonstrates how multiple data structures can cooperate in a complete application.
-- Teaches practical programming concepts such as arrays, pointers, structures, dynamic memory, file input/output, and algorithm design.
-- Shows the difference between primary storage and derived views of data.
-- Provides a simple, understandable model for information management.
-- Encourages orderly data entry and consistent record updates.
-- Offers a foundation that can later be developed into a graphical or database-based system.
-- Protects recent changes with an undo mechanism.
-- Saves records for reuse instead of losing all work when the program closes.
+**Flowchart – Figure 3**
+
+![Figure 3: Queue-based Church Service Request Processing](images/figure-3-queue-processing.png)
+
+*Figure 3: Flowchart illustrating church service request submission and processing using a FIFO queue.*
+
+**Time Complexity**
+
+| Operation | Complexity |
+|---|---|
+| Enqueue | O(1) |
+| Dequeue | O(1) |
+
+### 4. Searching and Sorting Algorithms
+
+**Purpose**
+
+Searching and sorting algorithms help administrators locate member records and organize information efficiently.
+
+**A. Linear Search**
+
+Linear Search examines each member record sequentially until the requested Member ID is found or all records have been checked.
+
+The array does not need to be sorted.
+
+**B. Binary Search**
+
+Binary Search locates a member by repeatedly dividing the search interval into two halves.
+
+The member records must be sorted by Member ID in ascending order before performing the search.
+
+**C. Bubble Sort**
+
+Bubble Sort repeatedly compares adjacent member records and swaps them when they are in the wrong order.
+
+The complete member records must be swapped together to maintain data consistency.
+
+**Flowchart – Figure 4**
+
+![Figure 4: Linear Search, Binary Search, and Bubble Sort](images/figure-4-searching-and-sorting.png)
+
+*Figure 4: Flowchart illustrating the searching and sorting operations used to organize and retrieve church member records.*
+
+**Time Complexity**
+
+| Algorithm | Worst-Case Complexity |
+|---|---|
+| Linear Search | O(n) |
+| Bubble Sort | O(n²) |
+| Binary Search | O(log n) |
+| Bubble Sort followed by Binary Search | O(n²) |
+
+### 5. Stack – Modification History and Undo
+
+**Purpose**
+
+The stack maintains modification history and allows administrators to reverse recent changes.
+
+It follows the Last-In, First-Out (LIFO) principle.
+
+Each history entry stores a snapshot of member records and the member count before a successful modification.
+
+**Main Operations**
+
+- Push the previous member state onto the stack.
+- Check whether the stack is full.
+- Check whether the stack is empty.
+- Undo the most recent modification.
+- Restore previously saved member records.
+
+**Flowchart – Figure 5**
+
+![Figure 5: Stack-based Modification History and Undo](images/figure-5-stack-undo.png)
+
+*Figure 5: Flowchart illustrating modification history and undo operations using a LIFO stack.*
+
+**Time Complexity**
+
+| Operation | Complexity |
+|---|---|
+| Stack index update | O(1) |
+| Saving a member snapshot | O(n) |
+| Restoring a member snapshot | O(n) |
+| Snapshot storage | O(MAX_HISTORY × MAX_MEMBERS) |
+
+The system supports undo operations but does not currently include redo functionality.
+
+---
+
+## Main Menu Structure
+
+The application provides the following main menu sections:
+
+| Option | Feature | Description |
+|---|---|---|
+| 1 | Member Record Management | Register, update, delete, and search members. |
+| 2 | Dynamic Membership Management | Manage active members using a linked list. |
+| 3 | Church Service Request Management | Submit, display, and process requests. |
+| 4 | Searching and Sorting | Search and organize member records. |
+| 5 | Modification History and Undo | View history and reverse recent changes. |
+| 6 | Display All Members | Display all stored member records. |
+| 7 | Save and Load Records | Save and retrieve member information. |
+| 0 | Exit | Close the application. |
+
+## Importance of the System
+
+The Church Membership Management System is important because it:
+
+- Demonstrates how different data structures work together in one application.
+- Provides an organized approach to managing church membership information.
+- Makes it easier to locate and update member records.
+- Supports orderly processing of church service requests.
+- Demonstrates the practical use of arrays, pointers, structures, dynamic memory, and file handling.
+- Provides an undo mechanism for reversing recent changes.
+- Preserves member records for future use.
 
 ## Social Benefits
 
-A membership system can support the church and the wider community in several ways:
+The system can provide several benefits to churches and their communities:
 
-- **Better pastoral and administrative support:** Church leaders can identify members, ministries, and service needs more accurately.
-- **Faster member assistance:** Staff can find contact information and submit or process requests more quickly.
-- **Clear service organization:** Baptism, counseling, prayer, transfer, and activity requests can be handled in arrival order.
-- **Improved communication:** Organized phone numbers and email addresses can help members receive announcements and pastoral messages.
-- **Ministry coordination:** The system can help organize members into Choir, Youth, Ushering, Deacon, Prayer Team, Children, Women, Men, or Other groups.
-- **Attendance follow-up:** Attendance totals can help leaders recognize engagement and identify members who may need encouragement or support.
-- **Transparency and accountability:** Saved records and undo history make changes easier to understand and review.
-- **Community care:** Reliable records can help leaders respond to vulnerable people, organize prayer or counseling support, and plan community activities.
+- **Improved Pastoral Support:** Helps church leaders identify members, ministries, and service needs.
+- **Faster Member Assistance:** Makes it easier to retrieve contact information and manage service requests.
+- **Organized Church Services:** Helps organize baptism, counseling, prayer, transfer, and activity requests.
+- **Improved Communication:** Organized contact information supports communication with church members.
+- **Ministry Coordination:** Helps organize members according to their ministries and departments.
+- **Attendance Monitoring:** Helps church leaders follow up on attendance and member participation.
+- **Accountability:** Organized records and modification history make changes easier to review.
+- **Community Care:** Supports the organization of prayer, counseling, and community activities.
 
-The system should be used responsibly. Member information may contain personal and sensitive data. Access should be limited to authorized church representatives, records should be updated accurately, and data should be backed up and shared only for legitimate ministry purposes.
+Member information should be handled responsibly. Access should be restricted to authorized church representatives, and personal information should only be shared for legitimate purposes.
 
-## Limitations
+## System Limitations
 
-The current version is a console application and stores records in a plain text file. It does not provide user accounts, passwords, network access, database transactions, or role-based permissions. The in-memory queue is reset between program runs because only member records are saved to disk.
+The current version is a console-based application that stores member records in a plain text file.
 
-These limits are acceptable for a small educational prototype, but a real church deployment would benefit from database storage, authentication, privacy controls, regular backups, data validation, and a graphical interface.
+It does not currently provide:
 
-## Requirements
+- User accounts and password authentication.
+- Network-based access.
+- Database integration.
+- Role-based access permissions.
+- Persistent storage for service requests.
+- Persistent storage for modification history.
+- Redo functionality.
 
-- Windows
-- GCC for Windows, such as WinLibs
+Possible future improvements include database integration, user authentication, improved privacy controls, automatic backups, and a graphical user interface.
 
-## Run the System
+## Conclusion
 
-Open PowerShell in this folder and run:
+The Church Membership Management System demonstrates how different data structures and algorithms can be integrated into one application to manage church membership information and service requests.
 
-```powershell
-.\run.bat
-```
+Through the implementation of arrays, singly linked lists, queues, stacks, searching algorithms, sorting algorithms, and file handling, the system provides an organized approach to managing member records and administrative activities.
 
-The launcher locates GCC, compiles `church membership system.c`, and starts `church_membership.exe`.
+The five flowcharts illustrate the major operations, processing steps, and decision-making processes involved in the application.
 
-To compile and run manually:
-
-```powershell
-gcc "church membership system.c" -o "church_membership.exe"
-.\church_membership.exe
-```
-
-## Data Files
-
-- `church_members.txt`: Saved member records
-- `church_members.tmp`: Temporary file used while saving
+Overall, the project demonstrates the practical importance of data structures and algorithms in solving real-world information-management problems.
