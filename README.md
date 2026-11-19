@@ -124,7 +124,7 @@ Complete member records are moved together during sorting to ensure that each me
 
 ### 5. Modification History and Undo
 
-The system uses a stack to maintain snapshots of member records before successful modifications.
+The system uses a stack to save the previous state of the affected member before a successful registration, update, or deletion.
 
 The stack follows the Last-In, First-Out (LIFO) principle, meaning the most recent change is reversed first.
 
@@ -166,11 +166,13 @@ The array stores the primary collection of church member records. It provides a 
 - Check for duplicate Member IDs.
 - Verify available array capacity.
 
-**Flowchart – Figure 1**
+**Figure 1: Array-Based Member Record Management**
 
 ![Figure 1: Array-based Member Record Management](images/figure-1-array-management.png)
 
-*Figure 1: Flowchart illustrating the process of adding and managing church member records using an array.*
+**Explanation:** The flowchart follows a new member from data entry to the final result. First, the system checks whether the member array has reached `MAX_MEMBERS`. If it is full, registration stops with a capacity message. Otherwise, the entered record is validated. Invalid data is rejected. For valid data, the system checks the existing records one by one for the same Member ID. A duplicate ID is rejected; if no duplicate is found, the new record is placed in the next available array position (`members[count]`), the count is increased, and registration succeeds. The `i` and `count` steps represent the loop that scans existing IDs.
+
+**Connection to the program:** This is the flow used when registering a member from the member-management menu. A successfully registered Active member is also added to the active linked list, and the registration is recorded so it can be undone.
 
 **Time Complexity**
 
@@ -197,11 +199,13 @@ Each node contains member information and a pointer to the next node.
 - Count active members.
 - Release allocated memory.
 
-**Flowchart – Figure 2**
+**Figure 2: Singly Linked List Dynamic Membership Management**
 
 ![Figure 2: Singly Linked List Dynamic Member Management](images/figure-2-linked-list-management.png)
 
-*Figure 2: Flowchart illustrating dynamic member management using a singly linked list.*
+**Explanation:** This flowchart illustrates appending a member node to the end of a singly linked list. The system first validates the member data, then starts at `head` and follows each node's `next` pointer. While traversing, it checks whether the Member ID is already present. A duplicate is rejected. If the end (`current == NULL`) is reached without finding a duplicate, the program allocates a new node and checks whether allocation succeeded. The new node stores the member data and has `next = NULL`. If the list is empty, the new node becomes `head`; otherwise, the last node's `next` pointer is set to the new node.
+
+**Connection to the program:** Only Active members belong in this list, and their full records remain in the array as the primary storage. The diagram focuses on insertion at the end; the program also supports inserting at the beginning, searching, deleting, displaying, and counting active members.
 
 **Time Complexity**
 
@@ -226,13 +230,16 @@ The first request submitted is the first request processed.
 - Process the oldest request (Dequeue).
 - Display pending requests.
 - Check whether the queue is empty.
-- Release allocated queue nodes.
 
-**Flowchart – Figure 3**
+The program stores requests in a fixed-size circular array with a capacity of 20. When the rear reaches the end of the array, it wraps around to the beginning if there is space.
+
+**Figure 3: Queue-Based Church Service Request Processing**
 
 ![Figure 3: Queue-based Church Service Request Processing](images/figure-3-queue-processing.png)
 
-*Figure 3: Flowchart illustrating church service request submission and processing using a FIFO queue.*
+**Explanation:** The flowchart shows a request menu with three choices: submit a request, process the next request, or exit. For submission, the request details are checked and a new request is added at the rear. If the queue is empty, that request becomes both the front and rear; otherwise, it is linked after the current rear. For processing, the request at the front is removed. If that was the only request, both front and rear become empty. Otherwise, front advances to the next request. This is FIFO behavior: the oldest waiting request is handled first. Invalid choices, invalid request data, an empty queue, and allocation failure each have their own outcome.
+
+**Connection to the program:** The program follows the same FIFO order, but its actual queue is a fixed-size circular array (`QUEUE_CAPACITY` is 20), not a linked list of dynamically allocated request nodes as drawn in this figure. Requests are entered only for existing members. Processing a Transfer request also changes that member's status and removes them from the active-member list.
 
 **Time Complexity**
 
@@ -265,11 +272,17 @@ Bubble Sort repeatedly compares adjacent member records and swaps them when they
 
 The complete member records must be swapped together to maintain data consistency.
 
-**Flowchart – Figure 4**
+**Figure 4: Member Searching and Sorting Algorithms**
 
 ![Figure 4: Linear Search, Binary Search, and Bubble Sort](images/figure-4-searching-and-sorting.png)
 
-*Figure 4: Flowchart illustrating the searching and sorting operations used to organize and retrieve church member records.*
+**Explanation:** This figure combines three algorithm paths selected from a menu:
+
+- **Linear Search:** The program asks for a target Member ID, starts at array index `i = 0`, and compares each record's ID with the target. It displays the matching member when found; if it reaches the end without a match, it reports that the member was not found.
+- **Binary Search:** The program searches a Member-ID-sorted sequence by checking the middle record. If the target is smaller, it continues in the left half; if larger, it continues in the right half. It repeats until it finds the ID or the search interval is empty. Each step discards about half of the remaining candidates.
+- **Bubble Sort:** The program compares adjacent records and swaps them when they are out of order. It repeats passes until the records are in the requested order, then displays the sorted results.
+
+**Important implementation detail:** The diagram's sort branch depicts sorting by Member ID, but the program's Bubble Sort menu sorts by attendance in ascending or descending order. For Binary Search, the program makes a separate copy of the records and sorts that copy by Member ID before searching, so it does not disturb the main array's current order.
 
 **Time Complexity**
 
@@ -288,7 +301,7 @@ The stack maintains modification history and allows administrators to reverse re
 
 It follows the Last-In, First-Out (LIFO) principle.
 
-Each history entry stores a snapshot of member records and the member count before a successful modification.
+Each history entry stores the affected member's previous data, the operation type, and the member's array index.
 
 **Main Operations**
 
@@ -298,20 +311,23 @@ Each history entry stores a snapshot of member records and the member count befo
 - Undo the most recent modification.
 - Restore previously saved member records.
 
-**Flowchart – Figure 5**
+**Figure 5: Stack-Based Modification History and Undo**
 
 ![Figure 5: Stack-based Modification History and Undo](images/figure-5-stack-undo.png)
 
-*Figure 5: Flowchart illustrating modification history and undo operations using a LIFO stack.*
+**Explanation:** The flowchart begins with `top = -1`, which represents an empty stack, and presents choices to add, modify, delete, undo, or exit. For a register, update, or delete, it checks whether the selected choice is valid, prepares the requested change, and validates it before applying it. If validation fails, the current member data stays unchanged. When a change succeeds, its prior state is pushed onto the stack and the updated record is committed. Undo checks whether the stack is empty; if it is not, it restores the most recent saved state, decrements `top`, and reports that the latest change was undone. This demonstrates Last-In, First-Out (LIFO): the most recent change is reversed first.
+
+**Connection to the program:** The program records the affected member's previous values, operation type, and array position rather than copying the entire member array for every operation. The stack holds up to 50 entries; when full, the program discards the oldest entry to make room for a new one. The diagram's full-stack branch shows a different policy, so that branch does not match the implementation. Undo reverses supported registration, update, and deletion operations and synchronizes the active-member linked list afterward.
 
 **Time Complexity**
 
 | Operation | Complexity |
 |---|---|
-| Stack index update | O(1) |
-| Saving a member snapshot | O(n) |
-| Restoring a member snapshot | O(n) |
-| Snapshot storage | O(MAX_HISTORY × MAX_MEMBERS) |
+| Push a history entry when the stack is not full | O(1) |
+| Push when full (discard oldest entry) | O(STACK_CAPACITY) |
+| Undo an update | O(1) |
+| Undo a registration or deletion | O(n) worst case, due to shifting array records |
+| History storage | O(STACK_CAPACITY) member snapshots |
 
 The system supports undo operations but does not currently include redo functionality.
 
